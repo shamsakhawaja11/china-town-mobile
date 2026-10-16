@@ -1,20 +1,6 @@
 import React from 'react';
-import {
-    ActivityIndicator,
-    Pressable,
-    StyleProp,
-    StyleSheet,
-    Text,
-    View,
-    ViewStyle,
-} from 'react-native';
-import Animated, {
-    interpolate,
-    interpolateColor,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
-} from 'react-native-reanimated';
+import { ActivityIndicator, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle, } from 'react-native';
+import Animated, { interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming, } from 'react-native-reanimated';
 import { colors, radius, spacing, typography } from '../theme';
 
 type Variant = 'primary' | 'outline' | 'dark';
@@ -45,7 +31,7 @@ const variants = {
         text: colors.textPrimary,
         border: colors.border,
         spinner: colors.textPrimary,
-    },
+    },  
     dark: {
         bg: colors.black,
         bgPressed: '#2A2A2A',
@@ -55,15 +41,7 @@ const variants = {
     },
 } as const;
 
-export function AppButton({
-    title,
-    onPress,
-    variant = 'primary',
-    loading = false,
-    disabled = false,
-    leftIcon,
-    style,
-}: AppButtonProps) {
+export function AppButton({ title, onPress, variant = 'primary', loading = false, disabled = false, leftIcon, style, }: AppButtonProps) {
     const v = variants[variant];
     const progress = useSharedValue(0);
     const isInactive = disabled || loading;
