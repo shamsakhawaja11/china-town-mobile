@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeOutUp, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { colors, radius, spacing, typography } from "../theme";
 import { Eye, EyeOff } from "lucide-react-native";
+
 interface AppTextFieldProps extends TextInputProps {
     label: string
     error?: string
     leftIcon?: React.ReactNode
 }
 
-export function AppTextField({ label, error, leftIcon,secureTextEntry, ...rest }: AppTextFieldProps) {
+export function AppTextField({ label, error, leftIcon, secureTextEntry, ...rest }: AppTextFieldProps) {
+
+    const hasError = Boolean(error)
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const focus = useSharedValue(0);
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
-            borderColor: interpolateColor(
+
+            borderColor: hasError ? colors.error : interpolateColor(
                 focus.value, [0, 1], [colors.border, colors.primary]
             ),
         };
@@ -34,7 +38,9 @@ export function AppTextField({ label, error, leftIcon,secureTextEntry, ...rest }
     return (
         <View style={styles.wrapper}>
             <Text style={styles.label}>{label}</Text>
-            <Animated.View style={[styles.box, animatedStyle]}>
+            <Animated.View style={[styles.box, animatedStyle]} >
+
+
                 {leftIcon ? <View style={{ marginRight: spacing.sm }}>{leftIcon}</View> : null}
 
                 <TextInput style={styles.input}
@@ -43,28 +49,31 @@ export function AppTextField({ label, error, leftIcon,secureTextEntry, ...rest }
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     placeholderTextColor={colors.textSecondary}
-                    accessibilityLabel="{label}"
+                    accessibilityLabel={label}
                 />
                 {
                     secureTextEntry ? (
-                        <Pressable style={styles.eye} onPress={() => setIsPasswordVisible((prev) => !prev)}
+                        <Pressable style={styles.eye}
+                            onPress={() => setIsPasswordVisible((prev) => !prev)}
                             hitSlop={12}
                             accessibilityRole='button'
                             accessibilityLabel={
                                 isPasswordVisible ? "Hide Password" : "Show Password"
                             }
-                            >
-                        {
-                            isPasswordVisible ? (
-                                <Eye size={20} color={colors.textSecondary}/>
-                            ):(
-                                <EyeOff size={20} color={colors.textSecondary}/>
-                            )
-                        }
+                        >
+                            {
+                                isPasswordVisible ? (
+                                    <Eye size={20} color={colors.textSecondary} />
+                                ) : (
+                                    <EyeOff size={20} color={colors.textSecondary} />
+                                )
+                            }
                         </Pressable>
-                    ):null
+                    ) : null
                 }
             </Animated.View>
+            {error ? <Animated.Text style={styles.error} accessibilityRole="alert" accessibilityLiveRegion="polite" entering={FadeInDown} exiting={FadeOutUp}>{error}</Animated.Text> : null}
+
         </View>
     );
 }
@@ -91,9 +100,14 @@ const styles = StyleSheet.create({
         ...typography.body,
         color: colors.textPrimary
     },
-    eye:{
-        marginLeft:spacing.sm
-    }
+    eye: {
+        marginLeft: spacing.sm
+    },
+    error: {
+        ...typography.caption,
+        color: colors.error,
+        marginTop: spacing.xs
+    },
 
 });
 
