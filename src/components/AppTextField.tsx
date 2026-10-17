@@ -34,8 +34,9 @@ export function AppTextField({ label, error, leftIcon, ...rest }: AppTextFieldPr
     return (
         <View style={styles.wrapper}>
             <Text style={styles.label}>{label}</Text>
-            <Animated.View>
-                <TextInput style={styles.input}/>
+            <Animated.View style={[styles.box, animatedStyle]}>
+                {leftIcon ? <View style={{ marginRight: spacing.sm }}>{leftIcon}</View> : null}
+                <TextInput style={styles.input} {...rest} onFocus={handleFocus} onBlur={handleBlur} placeholderTextColor={colors.textSecondary} accessibilityLabel="{label}" />
             </Animated.View>
         </View>
     )
@@ -52,19 +53,18 @@ const styles = StyleSheet.create({
     box: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 32,
+        height: 52,
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
         paddingHorizontal: spacing.lg,
     },
     input: {
-        flex:1,
+        flex: 1,
         ...typography.body,
-        color:colors.textPrimary
+        color: colors.textPrimary
     }
 
 });
 
-// const styles = StyleSheet.create({ wrapper, label, box, input, error })
 
