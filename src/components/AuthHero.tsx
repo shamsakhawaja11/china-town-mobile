@@ -1,5 +1,11 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+  ImageBackground,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UtensilsCrossed } from 'lucide-react-native';
@@ -8,18 +14,31 @@ import { colors, spacing, typography } from '../theme';
 // How far the cream card slides up over the hero. LoginScreen imports this too.
 export const HERO_OVERLAP = spacing.xxl;
 
+// 8-digit hex = color + alpha (last two digits). C7 is about 78%, F2 about 95%.
+// Lighter at the top so the photo shows, stronger at the bottom for the text.
+const TINT_TOP = `${colors.primary}C7`;
+const TINT_BOTTOM = `${colors.primaryDark}F2`;
+
 export function AuthHero() {
   return (
-    <LinearGradient
-      colors={[colors.primary, colors.primaryDark]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+    <ImageBackground
+      source={require('../assets/images/hero-restaurant.jpg')}
+      resizeMode="cover"
       style={styles.root}
+      accessibilityIgnoresInvertColors
     >
-      <StatusBar
-        barStyle="light-content"
+      <StatusBar barStyle="light-content" />
+
+      {/* Brand tint over the photo, so the text stays readable */}
+      <LinearGradient
+        colors={[TINT_TOP, TINT_BOTTOM]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
 
+      {/* Decorative circles: before the content, so the content draws on top */}
       <View
         pointerEvents="none"
         importantForAccessibility="no-hide-descendants"
@@ -29,11 +48,6 @@ export function AuthHero() {
         pointerEvents="none"
         importantForAccessibility="no-hide-descendants"
         style={[styles.circle, styles.circleMedium]}
-      />
-      <View
-        pointerEvents="none"
-        importantForAccessibility="no-hide-descendants"
-        style={[styles.circle, styles.circleSmall]}
       />
 
       <SafeAreaView edges={['top']} style={styles.content}>
@@ -45,7 +59,7 @@ export function AuthHero() {
         </Text>
         <Text style={styles.tagline}>Szechuan · Cantonese · Fine Dining</Text>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
@@ -65,18 +79,11 @@ const styles = StyleSheet.create({
     right: -60,
   },
   circleMedium: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    top: 110,
-    left: -50,
-  },
-  circleSmall: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    bottom: 40,
-    right: 30,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    top: 120,
+    left: -55,
   },
   content: {
     alignItems: 'center',
