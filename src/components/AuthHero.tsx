@@ -18,11 +18,8 @@ export function AuthHero() {
     >
       <StatusBar
         barStyle="light-content"
-        backgroundColor="transparent"
-        translucent
       />
 
-      {/* Decorative circles: first in the tree, so the content draws on top */}
       <View
         pointerEvents="none"
         importantForAccessibility="no-hide-descendants"
