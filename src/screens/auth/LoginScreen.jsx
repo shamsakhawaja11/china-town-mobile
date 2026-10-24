@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,7 +13,6 @@ import AppTextInput from '../../components/common/AppTextInput';
 import { useAuth } from '../../components/context/AuthContext';
 import { colors } from '../../theme'; // adjust to match your theme folder
 
-const logo = require('../../assets/images/logo.png'); // adjust to your pagoda logo path
 
 const LoginScreen = ({ navigation }) => {
   const { login } = useAuth();
@@ -59,7 +57,9 @@ const LoginScreen = ({ navigation }) => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <Image source={logo} style={styles.logo} resizeMode="contain" />
+        <View style={styles.logoPlaceholder}>
+          <Text style={styles.logoLetter}>C</Text>
+        </View>
 
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Sign in to continue</Text>
@@ -125,8 +125,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
-  logo: { width: 96, height: 96, alignSelf: 'center', marginBottom: 24 },
-  title: {
+  logoPlaceholder: {
+    width: 96,
+    height: 96,
+    borderRadius: 24,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    backgroundColor: colors.primary,
+  },
+  logoLetter: { fontSize: 44, fontWeight: '700', color: colors.white }, title: {
     fontSize: 26,
     fontWeight: '700',
     color: colors.textPrimary,
