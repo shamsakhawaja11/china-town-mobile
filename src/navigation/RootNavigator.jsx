@@ -2,24 +2,80 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  Home,
+  Search,
+  ShoppingBag,
+  Star,
+  User,
+  UtensilsCrossed,
+} from 'lucide-react-native';
 import AppButton from '../components/common/AppButton';
 import { useAuth } from '../components/context/AuthContext';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import RestaurantScreen from '../screens/restaurant/RestaurantScreen';
 import { colors } from '../theme';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-// Temporary stand-in until the real Home screen exists.
-const TempHome = () => {
+// Stand-in for tabs whose real screen does not exist yet.
+const PlaceholderScreen = ({ title }) => (
+  <View style={styles.center}>
+    <Text style={styles.text}>{title}</Text>
+    <Text style={styles.subText}>Coming soon</Text>
+  </View>
+);
+
+const SearchScreen = () => <PlaceholderScreen title="Search" />;
+const MenuScreen = () => <PlaceholderScreen title="Menu" />;
+const OrdersScreen = () => <PlaceholderScreen title="Orders" />;
+const ReviewsScreen = () => <PlaceholderScreen title="Reviews" />;
+
+// Temporary profile: keeps a way to log out until the real screen exists.
+const ProfileScreen = () => {
   const { logout } = useAuth();
   return (
     <View style={styles.center}>
-      <Text style={styles.text}>Logged in</Text>
+      <Text style={styles.text}>Profile</Text>
       <AppButton title="Log out" onPress={logout} style={styles.logoutButton} />
     </View>
   );
 };
+
+const TAB_ICONS = {
+  Home,
+  Search,
+  Menu: UtensilsCrossed,
+  Orders: ShoppingBag,
+  Reviews: Star,
+  Profile: User,
+};
+
+const MainTabs = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      headerShown: false,
+      tabBarActiveTintColor: colors.primary,
+      tabBarInactiveTintColor: colors.textMuted,
+      tabBarLabelStyle: styles.tabLabel,
+      tabBarStyle: styles.tabBar,
+      tabBarIcon: ({ color, size }) => {
+        const Icon = TAB_ICONS[route.name];
+        return <Icon size={size} color={color} strokeWidth={1.75} />;
+      },
+    })}
+  >
+    <Tab.Screen name="Home" component={RestaurantScreen} />
+    <Tab.Screen name="Search" component={SearchScreen} />
+    <Tab.Screen name="Menu" component={MenuScreen} />
+    <Tab.Screen name="Orders" component={OrdersScreen} />
+    <Tab.Screen name="Reviews" component={ReviewsScreen} />
+    <Tab.Screen name="Profile" component={ProfileScreen} />
+  </Tab.Navigator>
+);
 
 const RootNavigator = () => {
   const { isRestoring, isAuthenticated } = useAuth();
@@ -38,10 +94,10 @@ const RootNavigator = () => {
         screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
       >
         {isAuthenticated ? (
-          <Stack.Screen name="Home" component={TempHome} />
+          // Screens that sit ABOVE the tabs (Map, BookTable, ...) get added here later.
+          <Stack.Screen name="Main" component={MainTabs} />
         ) : (
           <>
-            {/* First screen listed is the initial one */}
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
           </>
@@ -62,5 +118,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   text: { fontSize: 20, fontWeight: '600', color: colors.textPrimary },
+  subText: { marginTop: 6, fontSize: 14, color: colors.textMuted },
   logoutButton: { marginTop: 24, alignSelf: 'stretch' },
+  tabBar: {
+    backgroundColor: colors.surface,
+    borderTopColor: colors.border,
+  },
+  tabLabel: { fontSize: 11, fontWeight: '600' },
 });
