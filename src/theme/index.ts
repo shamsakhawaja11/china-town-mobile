@@ -6,3 +6,5 @@ export type { SpacingKey, RadiusKey } from './spacing';
 
 export { typography, fontFamily, fontSize } from './typography';
 export type { TypographyKey } from './typography';
+
+export { shadows } from './shadows';

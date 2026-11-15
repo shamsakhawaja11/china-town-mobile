@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
     const register = useCallback(
         async ({ name, email, phone, password }) => {
             await registerRequest({ name, email, phone, password });
-            // Account exists now, so sign in with the same details.
             await login({ contact: email || phone, password });
         },
         [login],
