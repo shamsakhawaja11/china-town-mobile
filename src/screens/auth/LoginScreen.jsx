@@ -27,7 +27,7 @@ const LoginScreen = ({ navigation }) => {
 
   const validate = () => {
     const errors = {};
-    if (!contact.trim()) errors.contact = 'Enter your email or phone number';
+    if (!contact.trim()) errors.contact = 'Enter your email';
     if (!password) errors.password = 'Enter your password';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -44,7 +44,6 @@ const LoginScreen = ({ navigation }) => {
     } catch (err) {
       setFormError(err.message || 'Something went wrong');
     } finally {
-      // Runs on success AND failure, so the spinner never gets stuck.
       setLoading(false);
     }
   };
@@ -58,7 +57,6 @@ const LoginScreen = ({ navigation }) => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        {/* TODO: replace all text below with the exact Figma strings */}
         <Image
           source={require('../../assets/images/logo.png')}
           style={styles.logo}
@@ -66,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>Sign in to continue</Text>
+        <Text style={styles.subtitle}>Sign in to continue to China Town</Text>
 
         {formError ? (
           <View style={styles.errorBanner}>
@@ -75,8 +73,8 @@ const LoginScreen = ({ navigation }) => {
         ) : null}
 
         <AppTextInput
-          label="Email or phone"
-          placeholder="Enter your email or phone"
+          label="Email"
+          placeholder="ayesha@example.com"
           value={contact}
           onChangeText={setContact}
           error={fieldErrors.contact}
@@ -108,10 +106,10 @@ const LoginScreen = ({ navigation }) => {
           }
         />
 
-        <AppButton title="Sign in" onPress={handleSubmit} loading={loading} />
+        <AppButton title="Sign In" onPress={handleSubmit} loading={loading} />
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={styles.footerText}>Don’t have an account? </Text>
           <Pressable onPress={() => navigation?.navigate('Register')}>
             <Text style={styles.footerLink}>Create account</Text>
           </Pressable>
@@ -138,7 +136,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: '700',
     color: colors.textPrimary,
     textAlign: 'center',
