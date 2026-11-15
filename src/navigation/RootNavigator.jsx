@@ -5,7 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppButton from '../components/common/AppButton';
 import { useAuth } from '../components/context/AuthContext';
 import LoginScreen from '../screens/auth/LoginScreen';
-import { colors } from '../theme'; // adjust to match your theme folder
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import { colors } from '../theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,11 +34,17 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+      >
         {isAuthenticated ? (
           <Stack.Screen name="Home" component={TempHome} />
         ) : (
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <>
+            {/* First screen listed is the initial one */}
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
