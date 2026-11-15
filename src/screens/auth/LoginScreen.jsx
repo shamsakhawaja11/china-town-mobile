@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react-native';
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import { useAuth } from '../../components/context/AuthContext';
@@ -78,6 +79,7 @@ const LoginScreen = ({ navigation }) => {
           value={contact}
           onChangeText={setContact}
           error={fieldErrors.contact}
+          leftIcon={<Mail size={20} color={colors.textMuted} strokeWidth={1.75} />}
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="next"
@@ -91,6 +93,7 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           error={fieldErrors.password}
+          leftIcon={<Lock size={20} color={colors.textMuted} strokeWidth={1.75} />}
           secureTextEntry={!showPassword}
           autoCapitalize="none"
           autoCorrect={false}
@@ -100,8 +103,14 @@ const LoginScreen = ({ navigation }) => {
             <Pressable
               onPress={() => setShowPassword((prev) => !prev)}
               hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
             >
-              <Text style={styles.toggle}>{showPassword ? 'Hide' : 'Show'}</Text>
+              {showPassword ? (
+                <Eye size={20} color={colors.textMuted} strokeWidth={1.75} />
+              ) : (
+                <EyeOff size={20} color={colors.textMuted} strokeWidth={1.75} />
+              )}
             </Pressable>
           }
         />
@@ -155,7 +164,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorBackground,
   },
   errorBannerText: { fontSize: 13, color: colors.error },
-  toggle: { fontSize: 13, fontWeight: '600', color: colors.primary },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
