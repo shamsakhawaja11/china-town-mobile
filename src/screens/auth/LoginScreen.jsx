@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,8 +12,7 @@ import {
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import { useAuth } from '../../components/context/AuthContext';
-import { colors } from '../../theme'; // adjust to match your theme folder
-
+import { colors } from '../../theme';
 
 const LoginScreen = ({ navigation }) => {
   const { login } = useAuth();
@@ -40,10 +40,11 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await login({ contact: contact.trim(), password });
-      // Success: AuthContext flips isAuthenticated, and the root navigator
-      // (set up later) swaps this screen for the app. Nothing to do here.
+      // Success: AuthContext flips isAuthenticated and the navigator swaps screens.
     } catch (err) {
       setFormError(err.message || 'Something went wrong');
+    } finally {
+      // Runs on success AND failure, so the spinner never gets stuck.
       setLoading(false);
     }
   };
@@ -57,9 +58,12 @@ const LoginScreen = ({ navigation }) => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.logoPlaceholder}>
-          <Text style={styles.logoLetter}>C</Text>
-        </View>
+        {/* TODO: replace all text below with the exact Figma strings */}
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Sign in to continue</Text>
@@ -78,7 +82,6 @@ const LoginScreen = ({ navigation }) => {
           error={fieldErrors.contact}
           autoCapitalize="none"
           autoCorrect={false}
-          keyboardType="email-address"
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current?.focus()}
         />
@@ -96,7 +99,10 @@ const LoginScreen = ({ navigation }) => {
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
           rightElement={
-            <Pressable onPress={() => setShowPassword((prev) => !prev)} hitSlop={8}>
+            <Pressable
+              onPress={() => setShowPassword((prev) => !prev)}
+              hitSlop={8}
+            >
               <Text style={styles.toggle}>{showPassword ? 'Hide' : 'Show'}</Text>
             </Pressable>
           }
@@ -125,17 +131,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
-  logoPlaceholder: {
-    width: 96,
-    height: 96,
-    borderRadius: 24,
+  logo: {
+    width: 120,
+    height: 120,
     alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: 24,
-    backgroundColor: colors.primary,
   },
-  logoLetter: { fontSize: 44, fontWeight: '700', color: colors.white }, title: {
+  title: {
     fontSize: 26,
     fontWeight: '700',
     color: colors.textPrimary,
