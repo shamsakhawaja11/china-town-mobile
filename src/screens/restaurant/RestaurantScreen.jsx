@@ -23,11 +23,8 @@ import {
 import AppButton from '../../components/common/AppButton';
 import DishCard from '../../components/restaurant/DishCard';
 import InfoChip from '../../components/restaurant/InfoChip';
-import {
-  getMenuItems,
-  getRestaurant,
-  getTablesSummary,
-} from '../../api/restaurantApi';
+import { getMenuItems } from '../../api/menuApi';
+import { getRestaurant, getTablesSummary } from '../../api/restaurantApi';
 import { colors } from '../../theme';
 
 const OPEN_GREEN = '#2E9E5B';
@@ -78,7 +75,7 @@ const RestaurantScreen = ({ navigation }) => {
     // allSettled: a menu or tables failure should not blank the whole screen.
     const [restaurantResult, menuResult, tablesResult] = await Promise.allSettled([
       getRestaurant(),
-      getMenuItems({ limit: 6 }),
+      getMenuItems({ limit: 6, sortBy: 'rating', order: 'desc' }),
       getTablesSummary(),
     ]);
 
