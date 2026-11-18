@@ -1,17 +1,7 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { formatPrice } from '../../utils/formatPrice';
 import { colors } from '../../theme';
-
-// Prisma sends Decimal values as strings ("590.00"), so convert before formatting.
-// Manual comma grouping, because Intl/toLocaleString is unreliable on some Android builds.
-const formatPrice = (price) => {
-  const value = Number(price);
-  if (Number.isNaN(value)) return '';
-  const fixed = Number.isInteger(value) ? String(value) : value.toFixed(2);
-  const [whole, decimals] = fixed.split('.');
-  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return `Rs ${decimals ? `${grouped}.${decimals}` : grouped}`;
-};
 
 const DishCard = ({ item, onPress, style }) => (
   <Pressable
