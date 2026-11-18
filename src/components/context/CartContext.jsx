@@ -2,16 +2,29 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+
   // One line per dish: { item, quantity }. Mirrors order_items, which has
   // UNIQUE (order_id, menu_item_id).
   const [lines, setLines] = useState([]);
+
+  // Empty the cart on logout so the next person on this phone starts fresh.
+  // The guard returns the same array when it is already empty, which avoids a
+  // pointless re-render on app start (isAuthenticated is false while restoring).
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLines((prev) => (prev.length === 0 ? prev : []));
+    }
+  }, [isAuthenticated]);
 
   const addItem = useCallback((item) => {
     setLines((prev) => {
