@@ -14,10 +14,15 @@ const DEV_HOST = USE_PHYSICAL_DEVICE
       ios: 'localhost', // iOS simulator shares your computer's network
     });
 
-const DEV_API_URL = `http://${DEV_HOST}:${DEV_PORT}/api/v1`;
+// Server address WITHOUT any path. Photos live at <SERVER_URL>/uploads/...,
+// while API calls live at <SERVER_URL>/api/v1/...
+const DEV_SERVER_URL = `http://${DEV_HOST}:${DEV_PORT}`;
 
 // Production: placeholder until the backend is deployed behind HTTPS.
-const PROD_API_URL = 'https://api.chinatown.example.com/api/v1';
+const PROD_SERVER_URL = 'https://api.chinatown.example.com';
 
 // __DEV__ is a global provided by React Native: true in debug, false in release builds.
-export const API_BASE_URL = __DEV__ ? DEV_API_URL : PROD_API_URL;
+export const SERVER_URL = __DEV__ ? DEV_SERVER_URL : PROD_SERVER_URL;
+
+// Derived from SERVER_URL so the two can never disagree.
+export const API_BASE_URL = `${SERVER_URL}/api/v1`;
