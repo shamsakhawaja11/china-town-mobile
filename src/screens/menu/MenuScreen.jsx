@@ -166,9 +166,7 @@ const MenuScreen = ({ navigation }) => {
 
           <Pressable
             style={styles.cartButton}
-            onPress={() => {
-              // TODO: open the Cart screen once it exists.
-            }}
+            onPress={() => navigation?.navigate('Cart')}
             accessibilityRole="button"
             accessibilityLabel={`Cart, ${itemCount} items`}
           >
