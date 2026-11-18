@@ -23,7 +23,11 @@ import {
 import AppButton from '../../components/common/AppButton';
 import DishCard from '../../components/restaurant/DishCard';
 import InfoChip from '../../components/restaurant/InfoChip';
-import { getMenuItems, getRestaurant } from '../../api/restaurantApi';
+import {
+  getMenuItems,
+  getRestaurant,
+  getTablesSummary,
+} from '../../api/restaurantApi';
 import { colors } from '../../theme';
 
 const OPEN_GREEN = '#2E9E5B';
@@ -62,6 +66,7 @@ const RestaurantScreen = ({ navigation }) => {
 
   const [restaurant, setRestaurant] = useState(null);
   const [dishes, setDishes] = useState([]);
+  const [tables, setTables] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
@@ -70,10 +75,11 @@ const RestaurantScreen = ({ navigation }) => {
 
   const load = useCallback(async () => {
     setError('');
-    // allSettled: a menu failure should not blank the whole screen.
-    const [restaurantResult, menuResult] = await Promise.allSettled([
+    // allSettled: a menu or tables failure should not blank the whole screen.
+    const [restaurantResult, menuResult, tablesResult] = await Promise.allSettled([
       getRestaurant(),
       getMenuItems({ limit: 6 }),
+      getTablesSummary(),
     ]);
 
     if (restaurantResult.status === 'fulfilled') {
@@ -84,6 +90,10 @@ const RestaurantScreen = ({ navigation }) => {
 
     if (menuResult.status === 'fulfilled') {
       setDishes(menuResult.value.items ?? []);
+    }
+
+    if (tablesResult.status === 'fulfilled') {
+      setTables(tablesResult.value);
     }
   }, []);
 
@@ -136,6 +146,12 @@ const RestaurantScreen = ({ navigation }) => {
   }
 
   const status = getOpenStatus(restaurant.opening_time, restaurant.closing_time);
+
+  const totalTables = tables?.total_tables ?? 0;
+  const tablesTitle = `${totalTables} ${totalTables === 1 ? 'table' : 'tables'}`;
+  const tablesSubtitle = tables?.categories?.length
+    ? tables.categories.join(', ')
+    : undefined;
 
   return (
     <View style={styles.flex}>
@@ -220,8 +236,9 @@ const RestaurantScreen = ({ navigation }) => {
               subtitle={status.subtitle}
               titleColor={status.color}
             />
-            {/* TODO: tables chip ("15 tables / Indoor seating") once the tables
-                endpoint shape is known. */}
+            {totalTables > 0 ? (
+              <InfoChip title={tablesTitle} subtitle={tablesSubtitle} />
+            ) : null}
           </View>
 
           {restaurant.description ? (
@@ -379,4 +396,4 @@ const styles = StyleSheet.create({
   },
   reviewsText: { fontSize: 14, fontWeight: '700', color: colors.textPrimary },
   pressed: { opacity: 0.85 },
-}); 
+});
