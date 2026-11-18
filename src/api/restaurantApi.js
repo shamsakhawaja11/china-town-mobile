@@ -1,18 +1,15 @@
 import client from './client';
 
-
+// GET /restaurant (public). Returns name, description, address, phone,
+// latitude, longitude, opening_time, closing_time, and image_url once migrated.
 export const getRestaurant = async () => {
   const { data } = await client.get('/restaurant');
   return data;
 };
 
-export const getMenuItems = async (params = {}) => {
-  const { data } = await client.get('/menu/items', {
-    params: { limit: 6, ...params },
-  });
+// GET /restaurant/tables-summary (public).
+// Returns { total_tables: number, categories: string[] }.
+export const getTablesSummary = async () => {
+  const { data } = await client.get('/restaurant/tables-summary');
   return data;
 };
-export const getTablesSummary = async () => {
-  const { data } = await client.get('tables-summary');
-  return data;
-}
