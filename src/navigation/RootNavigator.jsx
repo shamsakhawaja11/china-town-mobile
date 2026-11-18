@@ -3,11 +3,19 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Search, ShoppingBag, Star, User, UtensilsCrossed } from 'lucide-react-native';
+import {
+  Home,
+  Search,
+  ShoppingBag,
+  Star,
+  User,
+  UtensilsCrossed,
+} from 'lucide-react-native';
 import AppButton from '../components/common/AppButton';
 import { useAuth } from '../components/context/AuthContext';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import CartScreen from '../screens/cart/CartScreen';
 import MenuScreen from '../screens/menu/MenuScreen';
 import RestaurantScreen from '../screens/restaurant/RestaurantScreen';
 import { colors } from '../theme';
@@ -15,6 +23,7 @@ import { colors } from '../theme';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Stand-in for tabs whose real screen does not exist yet.
 const PlaceholderScreen = ({ title }) => (
   <View style={styles.center}>
     <Text style={styles.text}>{title}</Text>
@@ -86,8 +95,11 @@ const RootNavigator = () => {
         screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
       >
         {isAuthenticated ? (
-          // Screens that sit ABOVE the tabs (Map, BookTable, ...) get added here later.
-          <Stack.Screen name="Main" component={MainTabs} />
+          <>
+            <Stack.Screen name="Main" component={MainTabs} />
+            {/* Screens that open ABOVE the tab bar. Map and BookTable go here later. */}
+            <Stack.Screen name="Cart" component={CartScreen} />
+          </>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
