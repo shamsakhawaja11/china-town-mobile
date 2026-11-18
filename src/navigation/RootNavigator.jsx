@@ -3,25 +3,18 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  Home,
-  Search,
-  ShoppingBag,
-  Star,
-  User,
-  UtensilsCrossed,
-} from 'lucide-react-native';
+import { Home, Search, ShoppingBag, Star, User, UtensilsCrossed } from 'lucide-react-native';
 import AppButton from '../components/common/AppButton';
 import { useAuth } from '../components/context/AuthContext';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import MenuScreen from '../screens/menu/MenuScreen';
 import RestaurantScreen from '../screens/restaurant/RestaurantScreen';
 import { colors } from '../theme';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Stand-in for tabs whose real screen does not exist yet.
 const PlaceholderScreen = ({ title }) => (
   <View style={styles.center}>
     <Text style={styles.text}>{title}</Text>
@@ -30,7 +23,6 @@ const PlaceholderScreen = ({ title }) => (
 );
 
 const SearchScreen = () => <PlaceholderScreen title="Search" />;
-const MenuScreen = () => <PlaceholderScreen title="Menu" />;
 const OrdersScreen = () => <PlaceholderScreen title="Orders" />;
 const ReviewsScreen = () => <PlaceholderScreen title="Reviews" />;
 
